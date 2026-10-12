@@ -1,0 +1,32 @@
+{
+  "id": "/",
+  "name": "SPG Earnings",
+  "short_name": "SPG Earnings",
+  "description": "Estimate monthly StartPlaying earnings after platform fees.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f8fa",
+  "theme_color": "#0b7db8",
+  "categories": ["finance", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/spg-earnings-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/spg-earnings-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/spg-earnings-icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

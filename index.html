@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b7db8">
+  <meta name="description" content="Estimate monthly StartPlaying earnings, platform fees, canceled sessions, and take-home pay.">
+  <meta name="application-name" content="SPG Earnings">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SPG Earnings">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b7db8'/%3E%3Cpath d='M20 16h24v32H20z' fill='white'/%3E%3Cpath d='M25 21h14v8H25zm0 13h6v5h-6zm9 0h5v5h-5zm-9 8h6v3h-6zm9 0h5v3h-5z' fill='%230b7db8'/%3E%3C/svg%3E">
+  <title>StartPlaying Earnings Calculator</title>
+  <style>
+    :root{
+      --spg:#0b7db8;
+      --spg-dark:#07577f;
+      --spg-light:#e8f6fc;
+      --ink:#13212b;
+      --muted:#617381;
+      --line:#d9e4ea;
+      --surface:#ffffff;
+      --background:#f4f8fa;
+      --danger:#b44848;
+      --shadow:0 16px 42px rgba(19,33,43,.09);
+    }
+    *{box-sizing:border-box}
+    html{color-scheme:light}
+    body{margin:0;min-width:320px;background:var(--background);color:var(--ink);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+    button,input,select{font:inherit;color:inherit}
+    button,input,select,summary{outline-color:var(--spg)}
+    .shell{min-height:100vh;padding:clamp(18px,4vw,56px) 16px;background:linear-gradient(180deg,#07141c 0 280px,var(--background) 280px)}
+    .app{width:min(1120px,100%);margin:auto}
+    header{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;padding:0 4px 28px;color:#fff}
+    .wordmark{margin:0 0 10px;color:#fff;font-family:"Rockwell Extra Bold",Rockwell,"Roboto Slab",Georgia,serif;font-size:clamp(22px,3vw,31px);font-weight:900;letter-spacing:-.04em}
+    .wordmark span{color:#38a9df}
+    h1{margin:0;font-size:clamp(34px,6vw,62px);line-height:.98;letter-spacing:-.045em}
+    .header-side{display:flex;max-width:430px;flex-direction:column;align-items:flex-start;gap:14px}
+    .intro{margin:0;color:#bed0da;font-size:15px;line-height:1.55}
+    .install-button{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 15px;border:1px solid rgba(255,255,255,.32);border-radius:9px;background:#fff;color:#07577f;cursor:pointer;font-weight:850;box-shadow:0 8px 22px rgba(0,0,0,.18)}
+    .install-button:hover{background:#e8f6fc;border-color:#fff}.install-button:focus-visible{outline:3px solid #38a9df;outline-offset:3px}.install-button[hidden]{display:none}
+    .install-button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2}
+    .panel{overflow:hidden;background:var(--surface);border:1px solid rgba(217,228,234,.9);border-radius:20px;box-shadow:var(--shadow)}
+    .monthbar{display:flex;align-items:end;gap:14px;padding:22px clamp(18px,4vw,38px);background:#fbfdfe;border-bottom:1px solid var(--line)}
+    .control{width:230px}.control.year{width:125px}
+    .control label{display:block;margin:0 0 7px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+    select,.year input{width:100%;height:44px;padding:0 12px;border:1px solid #bccbd4;border-radius:9px;background:#fff;font-weight:700;box-shadow:0 1px 2px rgba(19,33,43,.04)}
+    select:focus,.year input:focus{border-color:var(--spg);box-shadow:0 0 0 3px rgba(11,125,184,.13)}
+    .fee-badge{margin-left:auto;padding:9px 13px;color:var(--spg-dark);background:var(--spg-light);border:1px solid #b8ddf0;border-radius:999px;font-size:12px;font-weight:800}
+    .block{padding:32px clamp(18px,4vw,38px)}
+    .heading{display:flex;align-items:end;justify-content:space-between;gap:28px;margin-bottom:20px}
+    .heading h2{margin:3px 0 0;font-size:clamp(23px,3vw,32px);line-height:1.05;letter-spacing:-.03em}
+    .heading>p{max-width:420px;margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+    .kicker{margin:0;color:var(--spg);font-size:10px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+    .daygrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+    .day{min-width:0;padding:13px 11px 11px;background:#fff;border:1px solid var(--line);border-radius:12px;cursor:text;transition:border-color .15s,box-shadow .15s,transform .15s}
+    .day:hover{transform:translateY(-1px);border-color:#96bdcf;box-shadow:0 6px 18px rgba(19,33,43,.06)}
+    .day.active{background:#f3fbff;border-color:var(--spg);box-shadow:inset 0 0 0 1px var(--spg)}
+    .mark{display:block;color:var(--spg);font-size:10px;font-weight:900;letter-spacing:.12em}
+    .name{display:block;margin:5px 0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:750}
+    .money{display:flex;align-items:center;height:37px;border-bottom:2px solid #aebdc5}
+    .money>span{color:var(--muted);font-weight:800}
+    .money input{min-width:0;width:100%;height:35px;padding:4px;border:0;background:transparent;outline:0;font-size:18px;font-weight:800}
+    .totals{display:grid;grid-template-columns:1fr 1fr minmax(270px,1.35fr);margin:0 clamp(18px,4vw,38px);overflow:hidden;background:#0d1d27;border-radius:15px;color:#fff}
+    .total,.takehome{padding:21px 23px}
+    .total{display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(255,255,255,.1)}
+    .total span,.takehome span{color:#9eb3c0;font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+    .total strong{margin-top:7px;font-size:clamp(21px,3vw,29px)}
+    .fee strong{color:#e6adb0}
+    .takehome{position:relative;background:linear-gradient(120deg,var(--spg-dark),var(--spg));box-shadow:inset 5px 0 #42afe1}
+    .takehome span{color:#d9f2fd}.takehome strong{display:block;margin-top:5px;font-size:clamp(32px,5vw,48px);line-height:1;letter-spacing:-.04em}
+    .takehome small{position:absolute;right:15px;top:13px;color:rgba(255,255,255,.62);font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+    .results{padding-top:36px}
+    .tableframe{overflow:hidden;border:1px solid var(--line);border-radius:12px}
+    table{width:100%;border-collapse:collapse}thead{background:#f0f6f9}
+    th{height:42px;padding:0 14px;color:var(--muted);font-size:9px;font-weight:900;letter-spacing:.12em;text-align:left;text-transform:uppercase}
+    td{padding:12px 14px;border-top:1px solid var(--line);font-size:14px}.right{text-align:right}
+    .rate{display:block;margin-top:2px;color:var(--muted);font-size:11px}.net{color:var(--spg-dark);font-size:16px;font-weight:900}
+    .empty{display:flex;align-items:center;justify-content:center;min-height:96px;padding:22px;color:var(--muted);border:1px dashed #b8cbd5;border-radius:12px;background:#fbfdfe;text-align:center}
+    details{margin:0 clamp(18px,4vw,38px) 32px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    summary{min-height:68px;padding:14px 2px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;list-style:none;font-size:18px;font-weight:800}
+    summary::-webkit-details-marker{display:none}summary:after{content:"+";order:3;margin-left:14px;color:var(--spg);font-size:27px;font-weight:500}details[open] summary:after{content:"−"}
+    summary>span{display:flex;flex-direction:column}summary small{margin-bottom:3px;color:var(--spg);font-size:8px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+    summary b{margin-left:auto;color:var(--muted);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+    .datepanel{padding:0 0 23px}.datehelp{display:flex;justify-content:space-between;align-items:center;gap:18px;margin:0 0 14px;color:var(--muted);font-size:13px}.datehelp p{margin:0}
+    .datehelp button{padding:8px 12px;border:1px solid #b8c9d2;border-radius:8px;background:#fff;cursor:pointer;font-weight:750}.datehelp button:hover{border-color:var(--spg);color:var(--spg-dark)}
+    .datelist{overflow:hidden;border:1px solid var(--line);border-radius:12px}
+    .daterow{display:grid;grid-template-columns:22px minmax(170px,1fr) minmax(130px,.8fr) minmax(150px,.7fr);align-items:center;gap:12px;min-height:64px;padding:10px 14px;background:#fff;border-bottom:1px solid var(--line)}
+    .daterow:last-child{border-bottom:0}.daterow.canceled{opacity:.5;background:#f4f6f7}.daterow input[type=checkbox]{width:17px;height:17px;accent-color:var(--spg)}
+    .datelabel{display:flex;flex-direction:column;cursor:pointer}.datelabel span,.usual{color:var(--muted);font-size:12px}.usual{font-style:italic}
+    .override{display:flex;align-items:center;justify-content:flex-end;gap:8px}.override>span{color:var(--muted);font-size:8px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+    .override .money{width:92px;height:34px}.override input{height:32px;font-size:15px}.nodates{margin:0;padding:22px;color:var(--muted);text-align:center}
+    footer{display:flex;justify-content:space-between;gap:20px;padding:0 clamp(18px,4vw,38px) 30px;color:#788a96;font-size:10px;line-height:1.5}
+    @media(max-width:920px){.daygrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+    @media(max-width:720px){.shell{padding:20px 10px;background:linear-gradient(180deg,#07141c 0 320px,var(--background) 320px)}header{display:block}.header-side{margin-top:16px}.totals{grid-template-columns:1fr 1fr}.takehome{grid-column:1/-1;box-shadow:inset 0 5px #42afe1}.daterow{grid-template-columns:22px 1fr minmax(125px,.7fr)}.usual{display:none}}
+    @media(max-width:520px){.shell{padding:0;background:#07141c}.app{padding-top:24px}header{padding:0 18px 24px}.panel{border-radius:18px 18px 0 0}.monthbar{align-items:stretch;flex-wrap:wrap}.control{width:calc(65% - 7px)}.control.year{width:calc(35% - 7px)}.fee-badge{width:100%;margin:0;text-align:center}.heading{display:block}.heading>p{margin-top:9px}.daygrid{grid-template-columns:repeat(2,minmax(0,1fr))}.day:last-child{grid-column:1/-1}.totals{grid-template-columns:1fr}.total{border-right:0;border-bottom:1px solid rgba(255,255,255,.1)}.takehome{grid-column:auto}.tableframe{overflow-x:auto}.tableframe table{min-width:500px}.datehelp{align-items:stretch;flex-direction:column}.daterow{grid-template-columns:22px 1fr}.override{grid-column:2;justify-content:flex-start}footer{flex-direction:column}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="app">
+      <header>
+        <div>
+          <p class="wordmark"><span>Start</span>Playing</p>
+          <h1>Earnings Calculator</h1>
+        </div>
+        <div class="header-side">
+          <p class="intro">Plan your month, account for canceled sessions, and see what remains after StartPlaying’s 15% fee.</p>
+          <button class="install-button" id="install-app" type="button" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg>
+            Install SPG Earnings
+          </button>
+        </div>
+      </header>
+
+      <section class="panel" aria-label="StartPlaying monthly earnings calculator">
+        <div class="monthbar">
+          <div class="control"><label for="month">Month</label><select id="month"></select></div>
+          <div class="control year"><label for="year">Year</label><input id="year" type="number" min="1900" max="2200"></div>
+          <div class="fee-badge">15% platform fee included</div>
+        </div>
+
+        <section class="block">
+          <div class="heading"><div><p class="kicker">Regular schedule</p><h2>Usual earnings by weekday</h2></div><p>Enter your normal gross earnings for each weekday you run games. Leave unused days blank.</p></div>
+          <div class="daygrid" id="day-grid"></div>
+        </section>
+
+        <section class="totals" aria-live="polite">
+          <div class="total"><span>Gross earnings</span><strong id="gross">$0.00</strong></div>
+          <div class="total fee"><span>Platform fee (15%)</span><strong id="fee">−$0.00</strong></div>
+          <div class="takehome"><span>Estimated take-home</span><strong id="net">$0.00</strong><small id="period"></small></div>
+        </section>
+
+        <section class="block results">
+          <div class="heading"><div><p class="kicker">Monthly summary</p><h2>Earnings breakdown</h2></div></div>
+          <div id="breakdown"></div>
+        </section>
+
+        <details id="date-details">
+          <summary><span><small>Optional</small>Adjust individual sessions</span><b id="scheduled-count">0 scheduled</b></summary>
+          <div class="datepanel">
+            <div class="datehelp"><p>Uncheck a canceled session or enter a different gross amount for one date.</p><button id="clear-month" type="button">Clear this month’s changes</button></div>
+            <div id="date-list"></div>
+          </div>
+        </details>
+
+        <footer><span>Entries are saved only in this browser.</span><span>Unofficial community calculator. Not affiliated with StartPlaying.</span></footer>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+      const DAYS=[{name:"Sunday",mark:"SUN"},{name:"Monday",mark:"MON"},{name:"Tuesday",mark:"TUE"},{name:"Wednesday",mark:"WED"},{name:"Thursday",mark:"THU"},{name:"Friday",mark:"FRI"},{name:"Saturday",mark:"SAT"}];
+      const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+      const KEY="startplaying-earnings-calculator-v1";
+      const now=new Date();
+      let installPrompt=null;
+      let state={month:now.getMonth(),year:now.getFullYear(),earnings:Object.fromEntries(DAYS.map(d=>[d.name,""])),adjustments:{}};
+      const $=id=>document.getElementById(id);
+      const money=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",minimumFractionDigits:2});
+      const cents=value=>{const clean=String(value??"").replace(/[$,\s]/g,"");return /^(?:\d+(?:\.\d{0,2})?|\.\d{1,2})$/.test(clean)?Math.round(Number(clean)*100):0};
+      const cash=value=>money.format(value/100);
+      const keyFor=date=>`${state.year}-${String(state.month+1).padStart(2,"0")}-${String(date).padStart(2,"0")}`;
+      function load(){try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved)state={...state,...saved,earnings:{...state.earnings,...saved.earnings},adjustments:saved.adjustments||{}}}catch(e){}}
+      function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+      function dates(){const count=new Date(Date.UTC(state.year,state.month+1,0)).getUTCDate();return Array.from({length:count},(_,i)=>{const date=i+1,day=DAYS[new Date(Date.UTC(state.year,state.month,date)).getUTCDay()],key=keyFor(date),base=cents(state.earnings[day.name]),adj=state.adjustments[key]||{},included=adj.included!==false,override=adj.override||"";return{date,day,key,base,included,override,gross:included?(override?cents(override):base):0}})}
+      function dayInputs(){const grid=$("day-grid");grid.innerHTML="";DAYS.forEach(day=>{const label=document.createElement("label");label.className="day"+(cents(state.earnings[day.name])?" active":"");label.innerHTML=`<span class="mark">${day.mark}</span><span class="name">${day.name}</span><span class="money"><span>$</span><input inputmode="decimal" placeholder="0" aria-label="${day.name} earnings"></span>`;const input=label.querySelector("input");input.value=state.earnings[day.name];input.addEventListener("input",()=>{state.earnings[day.name]=input.value;label.classList.toggle("active",cents(input.value)>0);save();renderCalculations()});grid.append(label)})}
+      function render(){dayInputs();renderCalculations()}
+      function renderCalculations(){const all=dates(),scheduled=all.filter(d=>d.base>0),gross=scheduled.reduce((s,d)=>s+d.gross,0),fee=Math.round(gross*.15),net=gross-fee;$("gross").textContent=cash(gross);$("fee").textContent="−"+cash(fee);$("net").textContent=cash(net);$("period").textContent=`${MONTHS[state.month]} ${state.year}`;$("scheduled-count").textContent=`${scheduled.length} scheduled`;renderBreakdown(all);renderDates(scheduled)}
+      function renderBreakdown(all){const rows=DAYS.map(day=>{const matching=all.filter(d=>d.day.name===day.name),active=matching.filter(d=>d.included&&d.base>0),gross=active.reduce((s,d)=>s+d.gross,0),fee=Math.round(gross*.15);return{day,matching,active,gross,net:gross-fee,base:cents(state.earnings[day.name])}}).filter(r=>r.base>0);if(!rows.length){$("breakdown").innerHTML='<div class="empty"><p>Enter an amount above to calculate this month’s earnings.</p></div>';return}$("breakdown").innerHTML=`<div class="tableframe"><table><thead><tr><th>Day</th><th class="right">Paid dates</th><th class="right">Gross</th><th class="right">After 15%</th></tr></thead><tbody>${rows.map(r=>`<tr><td><strong>${r.day.name}</strong><span class="rate">${cash(r.base)} usual</span></td><td class="right">${r.active.length}${r.active.length!==r.matching.length?` of ${r.matching.length}`:""}</td><td class="right">${cash(r.gross)}</td><td class="right net">${cash(r.net)}</td></tr>`).join("")}</tbody></table></div>`}
+      function renderDates(scheduled){const host=$("date-list");if(!scheduled.length){host.className="";host.innerHTML='<p class="nodates">Enter at least one regular weekday amount to see its dates.</p>';return}host.className="datelist";host.innerHTML="";scheduled.forEach(item=>{const row=document.createElement("div");row.className="daterow"+(item.included?"":" canceled");row.innerHTML=`<input type="checkbox" id="include-${item.key}" aria-label="Include ${item.day.name}, ${MONTHS[state.month]} ${item.date}" ${item.included?"checked":""}><label class="datelabel" for="include-${item.key}"><strong>${item.day.name}</strong><span>${MONTHS[state.month]} ${item.date}</span></label><span class="usual">Usually ${cash(item.base)}</span><label class="override"><span>Override</span><span class="money"><span>$</span><input inputmode="decimal" placeholder="${item.base/100}" aria-label="Override earnings for ${item.day.name}, ${MONTHS[state.month]} ${item.date}" ${item.included?"":"disabled"}></span></label>`;const check=row.querySelector('input[type="checkbox"]'),input=row.querySelector('.override input');input.value=item.override;check.addEventListener("change",()=>{state.adjustments[item.key]={included:check.checked,override:input.value};save();render()});input.addEventListener("input",()=>{state.adjustments[item.key]={included:check.checked,override:input.value};save();updateTotalsOnly()});host.append(row)})}
+      function updateTotalsOnly(){const all=dates(),scheduled=all.filter(d=>d.base>0),gross=scheduled.reduce((s,d)=>s+d.gross,0),fee=Math.round(gross*.15);$("gross").textContent=cash(gross);$("fee").textContent="−"+cash(fee);$("net").textContent=cash(gross-fee);renderBreakdown(all)}
+      function summary(){const scheduled=dates().filter(d=>d.base>0),gross=scheduled.reduce((sum,d)=>sum+d.gross,0),fee=Math.round(gross*.15);return{month:MONTHS[state.month],year:state.year,scheduledSessions:scheduled.length,gross:gross/100,platformFee:fee/100,takeHome:(gross-fee)/100}}
+      function registerWebMCP(){const context=document.modelContext;if(!context?.registerTool)return;const register=tool=>{try{void Promise.resolve(context.registerTool(tool)).catch(()=>{})}catch(e){}};register({name:"get_earnings_summary",title:"Get earnings summary",description:"Read the calculator's selected month, session count, gross earnings, platform fee, and estimated take-home pay.",inputSchema:{type:"object",properties:{},additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:false},execute(){return summary()}});register({name:"set_weekday_earnings",title:"Set weekday earnings",description:"Set one or more usual gross earnings amounts by weekday and update the visible monthly calculation.",inputSchema:{type:"object",properties:{earnings:{type:"object",properties:Object.fromEntries(DAYS.map(day=>[day.name,{type:"number",minimum:0,maximum:100000}])),additionalProperties:false}},required:["earnings"],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){if(!input||typeof input!=="object"||!input.earnings||typeof input.earnings!=="object"||Array.isArray(input.earnings))throw new Error("earnings must be an object keyed by weekday");const valid=new Set(DAYS.map(day=>day.name));for(const [day,amount] of Object.entries(input.earnings)){if(!valid.has(day)||typeof amount!=="number"||!Number.isFinite(amount)||amount<0||amount>100000)throw new Error(`Invalid earnings amount for ${day}`)}for(const [day,amount] of Object.entries(input.earnings))state.earnings[day]=amount?String(Math.round(amount*100)/100):"";save();render();return summary()}})}
+      function setupInstall(){const button=$("install-app");window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();installPrompt=event;button.hidden=false});button.addEventListener("click",async()=>{if(!installPrompt)return;installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;button.hidden=true});window.addEventListener("appinstalled",()=>{installPrompt=null;button.hidden=true});if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}))}
+      function init(){load();$("month").innerHTML=MONTHS.map((m,i)=>`<option value="${i}">${m}</option>`).join("");$("month").value=state.month;$("year").value=state.year;$("month").addEventListener("change",e=>{state.month=Number(e.target.value);save();render()});$("year").addEventListener("change",e=>{state.year=Math.min(2200,Math.max(1900,Number(e.target.value)||now.getFullYear()));e.target.value=state.year;save();render()});$("clear-month").addEventListener("click",()=>{const prefix=`${state.year}-${String(state.month+1).padStart(2,"0")}-`;state.adjustments=Object.fromEntries(Object.entries(state.adjustments).filter(([key])=>!key.startsWith(prefix)));save();render()});render();registerWebMCP();setupInstall()}
+      init();
+    })();
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a49695dbde3efd8c',t:'MTc5MTgxMzE1MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
