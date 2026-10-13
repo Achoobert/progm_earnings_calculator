@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#0b7db8" />
     <meta
       name="description"
-      content="Estimate monthly StartPlaying earnings, platform fees, canceled sessions, and take-home pay."
+      content="Estimate monthly earnings, platform fees, canceled sessions, and take-home pay."
     />
     <meta name="application-name" content="SPG Earnings" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -17,7 +17,7 @@
       type="image/svg+xml"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b7db8'/%3E%3Cpath d='M20 16h24v32H20z' fill='white'/%3E%3Cpath d='M25 21h14v8H25zm0 13h6v5h-6zm9 0h5v5h-5zm-9 8h6v3h-6zm9 0h5v3h-5z' fill='%230b7db8'/%3E%3C/svg%3E"
     />
-    <title>StartPlaying Earnings Calculator</title>
+    <title>ProGMing Earnings Calculator</title>
     <style>
       :root {
         --spg: #0b7db8;
@@ -156,47 +156,7 @@
         border-radius: 20px;
         box-shadow: var(--shadow);
       }
-      .monthbar {
-        display: flex;
-        align-items: end;
-        gap: 14px;
-        padding: 22px clamp(18px, 4vw, 38px);
-        background: #fbfdfe;
-        border-bottom: 1px solid var(--line);
-      }
-      .control {
-        width: 230px;
-      }
-      .control.year {
-        width: 125px;
-      }
-      .control label {
-        display: block;
-        margin: 0 0 7px;
-        color: var(--muted);
-        font-size: 10px;
-        font-weight: 800;
-        letter-spacing: 0.13em;
-        text-transform: uppercase;
-      }
-      select,
-      .year input {
-        width: 100%;
-        height: 44px;
-        padding: 0 12px;
-        border: 1px solid #bccbd4;
-        border-radius: 9px;
-        background: #fff;
-        font-weight: 700;
-        box-shadow: 0 1px 2px rgba(19, 33, 43, 0.04);
-      }
-      select:focus,
-      .year input:focus {
-        border-color: var(--spg);
-        box-shadow: 0 0 0 3px rgba(11, 125, 184, 0.13);
-      }
       .fee-badge {
-        margin-left: auto;
         padding: 9px 13px;
         color: var(--spg-dark);
         background: var(--spg-light);
@@ -553,145 +513,170 @@
         background: #fbfdfe;
         text-align: center;
       }
-      details {
-        margin: 0 clamp(18px, 4vw, 38px) 32px;
-        border-top: 1px solid var(--line);
-        border-bottom: 1px solid var(--line);
+      .totals.top {
+        margin-top: 24px;
       }
-      summary {
-        min-height: 68px;
-        padding: 14px 2px;
+      .calbar {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        cursor: pointer;
-        list-style: none;
-        font-size: 18px;
-        font-weight: 800;
+        gap: 14px;
+        margin-bottom: 14px;
       }
-      summary::-webkit-details-marker {
-        display: none;
-      }
-      summary:after {
-        content: "+";
-        order: 3;
-        margin-left: 14px;
-        color: var(--spg);
-        font-size: 27px;
-        font-weight: 500;
-      }
-      details[open] summary:after {
-        content: "−";
-      }
-      summary > span {
+      .calnav {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        gap: 6px;
       }
-      summary small {
-        margin-bottom: 3px;
-        color: var(--spg);
-        font-size: 8px;
-        font-weight: 900;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+      .calnav button,
+      .calmeta button {
+        min-height: 38px;
+        padding: 0 12px;
+        border: 1px solid #b8c9d2;
+        border-radius: 9px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 750;
       }
-      summary b {
+      .calnav button:first-child,
+      .calnav button:nth-child(2) {
+        width: 38px;
+        padding: 0;
+        color: var(--spg-dark);
+        font-size: 19px;
+        line-height: 1;
+      }
+      .calnav button:hover,
+      .calmeta button:hover {
+        border-color: var(--spg);
+        color: var(--spg-dark);
+        background: var(--spg-light);
+      }
+      .calnow h2 {
+        margin: 3px 0 0;
+        font-size: clamp(23px, 3vw, 32px);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        white-space: nowrap;
+      }
+      .calmeta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         margin-left: auto;
+      }
+      .calmeta b {
         color: var(--muted);
         font-size: 10px;
+        font-weight: 900;
         letter-spacing: 0.1em;
         text-transform: uppercase;
       }
-      .datepanel {
-        padding: 0 0 23px;
-      }
-      .datehelp {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 18px;
+      .calhelp {
         margin: 0 0 14px;
         color: var(--muted);
-        font-size: 13px;
+        font-size: 14px;
       }
-      .datehelp p {
-        margin: 0;
+      .calscroll {
+        overflow-x: auto;
       }
-      .datehelp button {
-        padding: 8px 12px;
-        border: 1px solid #b8c9d2;
-        border-radius: 8px;
-        background: #fff;
-        cursor: pointer;
-        font-weight: 750;
-      }
-      .datehelp button:hover {
-        border-color: var(--spg);
-        color: var(--spg-dark);
-      }
-      .datelist {
+      .cal {
+        min-width: 680px;
         overflow: hidden;
+        background: #fff;
         border: 1px solid var(--line);
         border-radius: 12px;
       }
-      .daterow {
+      .calhead,
+      .calgrid {
         display: grid;
-        grid-template-columns: 22px minmax(170px, 1fr) minmax(
-            130px,
-            0.8fr
-          ) minmax(150px, 0.7fr);
-        align-items: center;
-        gap: 12px;
-        min-height: 64px;
-        padding: 10px 14px;
-        background: #fff;
-        border-bottom: 1px solid var(--line);
+        grid-template-columns: repeat(7, minmax(0, 1fr));
       }
-      .daterow:last-child {
-        border-bottom: 0;
+      .calhead {
+        background: #f0f6f9;
       }
-      .daterow.canceled {
-        opacity: 0.5;
-        background: #f4f6f7;
-      }
-      .daterow input[type="checkbox"] {
-        width: 17px;
-        height: 17px;
-        accent-color: var(--spg);
-      }
-      .datelabel {
-        display: flex;
-        flex-direction: column;
-        cursor: pointer;
-      }
-      .datelabel span,
-      .usual {
+      .calhead span {
+        padding: 10px 8px;
         color: var(--muted);
-        font-size: 12px;
-      }
-      .usual {
-        font-style: italic;
-      }
-      .override {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 8px;
-      }
-      .override > span {
-        color: var(--muted);
-        font-size: 8px;
+        font-size: 9px;
         font-weight: 900;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.12em;
+        text-align: center;
         text-transform: uppercase;
       }
-      .override .money {
-        width: 92px;
-        height: 34px;
+      .calcell {
+        min-width: 0;
+        min-height: 108px;
+        padding: 6px 7px 8px;
+        border-top: 1px solid var(--line);
+        border-left: 1px solid var(--line);
       }
-      .override input {
-        height: 32px;
-        font-size: 15px;
+      .calcell:nth-child(7n + 1) {
+        border-left: 0;
+      }
+      .calcell.blank {
+        background: #fafcfd;
+      }
+      .calcell.today {
+        background: #f8fcfe;
+        box-shadow: inset 0 0 0 1px var(--spg);
+      }
+      .caldate {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .caldate b {
+        color: var(--spg-dark);
+        font-size: 11px;
+        font-weight: 900;
+      }
+      .cal-table {
+        margin-top: 6px;
+      }
+      .cal-title,
+      .cal-player {
+        display: flex;
+        justify-content: space-between;
+        gap: 6px;
+        border-radius: 6px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .cal-title {
+        padding: 2px 4px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .cal-title:hover {
+        background: var(--spg-light);
+      }
+      .cal-player {
+        padding: 1px 4px 1px 13px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .cal-player:hover {
+        background: #f0f6f9;
+      }
+      .cal-title span:first-child,
+      .cal-player span:first-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .cal-amt {
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+      .off {
+        opacity: 0.45;
+        text-decoration: line-through;
       }
       .nodates {
         margin: 0;
@@ -730,10 +715,10 @@
           grid-column: 1/-1;
           box-shadow: inset 0 5px #42afe1;
         }
-        .daterow {
-          grid-template-columns: 22px 1fr minmax(125px, 0.7fr);
+        .calbar {
+          flex-wrap: wrap;
         }
-        .usual {
+        .calmeta .fee-badge {
           display: none;
         }
       }
@@ -750,21 +735,6 @@
         }
         .panel {
           border-radius: 18px 18px 0 0;
-        }
-        .monthbar {
-          align-items: stretch;
-          flex-wrap: wrap;
-        }
-        .control {
-          width: calc(65% - 7px);
-        }
-        .control.year {
-          width: calc(35% - 7px);
-        }
-        .fee-badge {
-          width: 100%;
-          margin: 0;
-          text-align: center;
         }
         .heading {
           display: block;
@@ -788,16 +758,12 @@
         .tableframe table {
           min-width: 500px;
         }
-        .datehelp {
-          align-items: stretch;
-          flex-direction: column;
+        .calmeta {
+          width: 100%;
+          margin-left: 0;
         }
-        .daterow {
-          grid-template-columns: 22px 1fr;
-        }
-        .override {
-          grid-column: 2;
-          justify-content: flex-start;
+        .calmeta button {
+          margin-left: auto;
         }
         footer {
           flex-direction: column;
@@ -815,14 +781,9 @@
       <div class="app">
         <header>
           <div>
-            <p class="wordmark"><span>Start</span>Playing</p>
-            <h1>Earnings Calculator</h1>
+            <p class="wordmark"><span>Still</span>Playing</p>
           </div>
           <div class="header-side">
-            <p class="intro">
-              Plan your month, account for canceled sessions, and see what
-              remains after StartPlaying’s 15% fee.
-            </p>
             <button
               class="install-button"
               id="install-app"
@@ -837,21 +798,19 @@
           </div>
         </header>
 
-        <section
-          class="panel"
-          aria-label="StartPlaying monthly earnings calculator"
-        >
-          <div class="monthbar">
-            <div class="control">
-              <label for="month">Month</label
-              ><select id="month"></select>
+        <section class="panel" aria-label="Monthly earnings calculator">
+          <section class="totals top" aria-live="polite">
+            <div class="total">
+              <span>Gross earnings</span><strong id="gross">$0.00</strong>
             </div>
-            <div class="control year">
-              <label for="year">Year</label
-              ><input id="year" type="number" min="1900" max="2200" />
+            <div class="total fee">
+              <span>Platform fee (15%)</span><strong id="fee">−$0.00</strong>
             </div>
-            <div class="fee-badge">15% platform fee included</div>
-          </div>
+            <div class="takehome">
+              <span>Estimated take-home</span><strong id="net">$0.00</strong
+              ><small id="period"></small>
+            </div>
+          </section>
 
           <section class="block">
             <div class="heading">
@@ -867,19 +826,6 @@
             <div class="daygrid" id="day-grid"></div>
           </section>
 
-          <section class="totals" aria-live="polite">
-            <div class="total">
-              <span>Gross earnings</span><strong id="gross">$0.00</strong>
-            </div>
-            <div class="total fee">
-              <span>Platform fee (15%)</span><strong id="fee">−$0.00</strong>
-            </div>
-            <div class="takehome">
-              <span>Estimated take-home</span><strong id="net">$0.00</strong
-              ><small id="period"></small>
-            </div>
-          </section>
-
           <section class="block results">
             <div class="heading">
               <div>
@@ -890,30 +836,41 @@
             <div id="breakdown"></div>
           </section>
 
-          <details id="date-details">
-            <summary>
-              <span><small>Optional</small>Adjust individual sessions</span
-              ><b id="scheduled-count">0 scheduled</b>
-            </summary>
-            <div class="datepanel">
-              <div class="datehelp">
-                <p>
-                  Uncheck a canceled table or enter a different gross amount for
-                  one date.
-                </p>
+          <section class="block calblock">
+            <div class="calbar">
+              <div class="calnav">
+                <button id="cal-prev" type="button" aria-label="Previous month">
+                  ‹
+                </button>
+                <button id="cal-next" type="button" aria-label="Next month">
+                  ›
+                </button>
+                <button id="cal-today" type="button">Today</button>
+              </div>
+              <div class="calnow">
+                <p class="kicker">Session calendar</p>
+                <h2 id="cal-title">Month</h2>
+              </div>
+              <div class="calmeta">
+                <b id="scheduled-count">0 scheduled</b>
+                <span class="fee-badge">15% platform fee included</span>
                 <button id="clear-month" type="button">
                   Clear this month’s changes
                 </button>
               </div>
-              <div id="date-list"></div>
             </div>
-          </details>
+            <p class="calhelp">
+              Click a table or a player to cancel it. Click again to bring it
+              back.
+            </p>
+            <div id="date-list"></div>
+          </section>
 
           <footer>
             <span>Entries are saved only in this browser.</span
             ><span
-              >Unofficial community calculator. Not affiliated with
-              StartPlaying.</span
+              >Unofficial community calculator. Not affiliated with any
+              platform.</span
             >
           </footer>
         </section>
@@ -946,7 +903,7 @@
           "November",
           "December",
         ];
-        const KEY = "startplaying-earnings-calculator-v2";
+        const KEY = "stillplaying-earnings-calculator-v2";
         const now = new Date();
         let installPrompt = null;
         const emptyDays = () =>
@@ -1014,6 +971,25 @@
             });
           return days;
         }
+        function sanitizeAdjustments(saved) {
+          if (!saved || typeof saved !== "object") return {};
+          const out = {};
+          Object.entries(saved).forEach(([key, value]) => {
+            if (!value || typeof value !== "object") return;
+            const included = value.included !== false,
+              canceled = (Array.isArray(value.canceled) ? value.canceled : [])
+                .filter((id) => typeof id === "string")
+                .map(String);
+            if (included && !canceled.length) return;
+            out[key] = { included, canceled };
+          });
+          return out;
+        }
+        function setAdjustment(key, included, canceled) {
+          if (included && !canceled.length) delete state.adjustments[key];
+          else state.adjustments[key] = { included, canceled };
+          save();
+        }
         function load() {
           try {
             const saved = JSON.parse(localStorage.getItem(KEY));
@@ -1022,10 +998,7 @@
                 ...state,
                 ...saved,
                 days: sanitize(saved),
-                adjustments:
-                  saved.adjustments && typeof saved.adjustments === "object"
-                    ? saved.adjustments
-                    : {},
+                adjustments: sanitizeAdjustments(saved.adjustments),
               };
           } catch (e) {}
         }
@@ -1051,7 +1024,9 @@
               const key = `${dateKey}|${table.id}`,
                 adj = state.adjustments[key] || {},
                 included = adj.included !== false,
-                override = adj.override || "";
+                canceled = new Set(
+                  Array.isArray(adj.canceled) ? adj.canceled : [],
+                );
               out.push({
                 date,
                 day,
@@ -1059,8 +1034,14 @@
                 key,
                 base,
                 included,
-                override,
-                gross: included ? (override ? cents(override) : base) : 0,
+                canceled,
+                gross: included
+                  ? table.players.reduce(
+                      (sum, p) =>
+                        sum + (canceled.has(p.id) ? 0 : cents(p.amount)),
+                      0,
+                    )
+                  : 0,
               });
             });
           }
@@ -1103,7 +1084,7 @@
           name.addEventListener("input", () => {
             table.name = name.value;
             save();
-            renderDates(entries());
+            renderCalendar(entries());
           });
           card
             .querySelector(".tablehead .removebtn")
@@ -1167,10 +1148,11 @@
           const all = entries();
           writeTotals(all);
           $("period").textContent = `${MONTHS[state.month]} ${state.year}`;
+          $("cal-title").textContent = `${MONTHS[state.month]} ${state.year}`;
           $("scheduled-count").textContent =
             `${all.filter((e) => e.included).length} scheduled`;
           renderBreakdown(all);
-          renderDates(all);
+          renderCalendar(all);
         }
         function writeTotals(all) {
           const gross = all.reduce((sum, e) => sum + e.gross, 0),
@@ -1186,7 +1168,7 @@
             `${all.filter((e) => e.included).length} scheduled`;
           refreshAmounts();
           renderBreakdown(all);
-          renderDates(all);
+          renderCalendar(all);
         }
         function renderBreakdown(all) {
           const rows = [];
@@ -1222,17 +1204,26 @@
           $("breakdown").innerHTML =
             `<div class="tableframe"><table><thead><tr><th>Day</th><th>Table</th><th class="right">Paid dates</th><th class="right">Gross</th><th class="right">After 15%</th></tr></thead><tbody>${rows.map((r) => `<tr><td><strong>${r.day.name}</strong></td><td>${esc(tableLabel(r.table, r.day))}<span class="rate">${cash(r.base)} per session · ${r.table.players.filter((p) => cents(p.amount)).length} paying</span></td><td class="right">${r.active.length}${r.active.length !== r.matching.length ? ` of ${r.matching.length}` : ""}</td><td class="right">${cash(r.gross)}</td><td class="right net">${cash(r.net)}</td></tr>`).join("")}</tbody></table></div>`;
         }
+        const escapeHtml = (text) =>
+          String(text).replace(
+            /[&<>"]/g,
+            (c) =>
+              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+          );
         let datesSignature = null;
-        function renderDates(all) {
+        function renderCalendar(all) {
           const host = $("date-list"),
-            signature = JSON.stringify(
+            signature = JSON.stringify([
+              state.month,
+              state.year,
               all.map((e) => [
                 e.key,
-                e.base,
                 e.included,
+                [...e.canceled].sort(),
                 tableLabel(e.table, e.day),
+                e.table.players.map((p) => [p.id, p.name, cents(p.amount)]),
               ]),
-            );
+            ]);
           if (signature === datesSignature) return;
           datesSignature = signature;
           if (!all.length) {
@@ -1241,38 +1232,67 @@
               '<p class="nodates">Add a table with a player amount to see its dates.</p>';
             return;
           }
-          host.className = "datelist";
-          host.innerHTML = "";
+          const byDate = new Map();
           all.forEach((item) => {
-            const row = document.createElement("div");
-            row.className = "daterow" + (item.included ? "" : " canceled");
-            const label = `${MONTHS[state.month]} ${item.date}`;
-            row.innerHTML = `<input type="checkbox" id="include-${item.key}" aria-label="Include ${item.day.name}, ${label}" ${item.included ? "checked" : ""}><label class="datelabel" for="include-${item.key}"><strong></strong><span>${label} · ${item.day.name}</span></label><span class="usual">Usually ${cash(item.base)}</span><label class="override"><span>Override</span><span class="money"><span>$</span><input inputmode="decimal" placeholder="${item.base / 100}" aria-label="Override earnings for ${label}" ${item.included ? "" : "disabled"}></span></label>`;
-            row.querySelector(".datelabel strong").textContent = tableLabel(
-              item.table,
-              item.day,
-            );
-            const check = row.querySelector('input[type="checkbox"]'),
-              input = row.querySelector(".override input");
-            input.value = item.override;
-            check.addEventListener("change", () => {
-              state.adjustments[item.key] = {
-                included: check.checked,
-                override: input.value,
-              };
-              save();
-              renderCalculations();
-            });
-            input.addEventListener("input", () => {
-              state.adjustments[item.key] = {
-                included: check.checked,
-                override: input.value,
-              };
-              save();
-              updateTotalsOnly();
-            });
-            host.append(row);
+            if (!byDate.has(item.date)) byDate.set(item.date, []);
+            byDate.get(item.date).push(item);
           });
+          const first = new Date(Date.UTC(state.year, state.month, 1)),
+            lead = first.getUTCDay(),
+            count = new Date(
+              Date.UTC(state.year, state.month + 1, 0),
+            ).getUTCDate(),
+            today = new Date(),
+            isThisMonth =
+              today.getFullYear() === state.year &&
+              today.getMonth() === state.month,
+            cells = [];
+          for (let i = 0; i < lead; i++)
+            cells.push('<div class="calcell blank"></div>');
+          for (let date = 1; date <= count; date++) {
+            const items = byDate.get(date) || [],
+              dayGrossCents = items.reduce((sum, e) => sum + e.gross, 0),
+              body = items
+                .map((item) => {
+                  const offTable = !item.included,
+                    rows = item.table.players
+                      .filter((p) => cents(p.amount))
+                      .map((p) => {
+                        const off = offTable || item.canceled.has(p.id);
+                        return `<div class="cal-player${off ? " off" : ""}" data-key="${escapeHtml(item.key)}" data-player="${escapeHtml(p.id)}" title="Click to cancel or restore this player"><span>${escapeHtml(p.name.trim() || "Player")}</span><span class="cal-amt">${cash(cents(p.amount))}</span></div>`;
+                      })
+                      .join("");
+                  return `<div class="cal-table"><div class="cal-title${offTable ? " off" : ""}" data-key="${escapeHtml(item.key)}" title="Click to cancel or restore this table"><span>${escapeHtml(tableLabel(item.table, item.day))}</span><span class="cal-amt">${cash(item.base)}</span></div>${rows}</div>`;
+                })
+                .join("");
+            cells.push(
+              `<div class="calcell${isThisMonth && today.getDate() === date ? " today" : ""}"><div class="caldate"><span>${date}</span>${dayGrossCents ? `<b>${cash(dayGrossCents)}</b>` : ""}</div>${body}</div>`,
+            );
+          }
+          while (cells.length % 7)
+            cells.push('<div class="calcell blank"></div>');
+          host.className = "calscroll";
+          host.innerHTML = `<div class="cal"><div class="calhead">${DAYS.map((d) => `<span>${d.mark}</span>`).join("")}</div><div class="calgrid">${cells.join("")}</div></div>`;
+        }
+        function toggleFromEvent(event) {
+          const player = event.target.closest(".cal-player"),
+            title = event.target.closest(".cal-title"),
+            hit = player || title;
+          if (!hit) return;
+          event.preventDefault();
+          const key = hit.dataset.key,
+            adj = state.adjustments[key] || {},
+            included = adj.included !== false,
+            canceled = new Set(Array.isArray(adj.canceled) ? adj.canceled : []);
+          if (player) {
+            const id = player.dataset.player;
+            if (canceled.has(id)) canceled.delete(id);
+            else canceled.add(id);
+            setAdjustment(key, included, [...canceled]);
+          } else {
+            setAdjustment(key, !included, [...canceled]);
+          }
+          renderCalculations();
         }
         function summary() {
           const all = entries(),
@@ -1423,27 +1443,26 @@
               navigator.serviceWorker.register("/sw.js").catch(() => {}),
             );
         }
+        function goToMonth(year, month) {
+          state.year = Math.min(2200, Math.max(1900, year));
+          state.month = month;
+          save();
+          render();
+        }
+        function shiftMonth(step) {
+          const moved = new Date(Date.UTC(state.year, state.month + step, 1));
+          goToMonth(moved.getUTCFullYear(), moved.getUTCMonth());
+        }
         function init() {
           load();
-          $("month").innerHTML = MONTHS.map(
-            (m, i) => `<option value="${i}">${m}</option>`,
-          ).join("");
-          $("month").value = state.month;
-          $("year").value = state.year;
-          $("month").addEventListener("change", (e) => {
-            state.month = Number(e.target.value);
-            save();
-            render();
+          $("cal-prev").addEventListener("click", () => shiftMonth(-1));
+          $("cal-next").addEventListener("click", () => shiftMonth(1));
+          $("cal-today").addEventListener("click", () => {
+            const today = new Date();
+            goToMonth(today.getFullYear(), today.getMonth());
           });
-          $("year").addEventListener("change", (e) => {
-            state.year = Math.min(
-              2200,
-              Math.max(1900, Number(e.target.value) || now.getFullYear()),
-            );
-            e.target.value = state.year;
-            save();
-            render();
-          });
+          $("date-list").addEventListener("click", toggleFromEvent);
+          $("date-list").addEventListener("contextmenu", toggleFromEvent);
           $("clear-month").addEventListener("click", () => {
             const prefix = `${state.year}-${String(state.month + 1).padStart(2, "0")}-`;
             state.adjustments = Object.fromEntries(

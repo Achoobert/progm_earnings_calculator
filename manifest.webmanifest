@@ -2,7 +2,7 @@
   "id": "/",
   "name": "SPG Earnings",
   "short_name": "SPG Earnings",
-  "description": "Estimate monthly StartPlaying earnings after platform fees.",
+  "description": "Estimate monthly earnings after platform fees.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
